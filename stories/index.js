@@ -144,4 +144,8 @@ storiesOf("Appointment", module)
         console.log("Hello its empty!");
       }}
     />
-  ));
+  ))
+  .add("Show", () => <Appointment />)
+  .add("Confirm", () => <Appointment />)
+  .add("Status", () => <Appointment />)
+  .add("Error", () => <Appointment />);
