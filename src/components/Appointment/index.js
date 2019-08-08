@@ -1,17 +1,19 @@
 import React from "react";
+import classnames from "classnames";
 import Header from "components/Appointment/Header";
 import Empty from "components/Appointment/Empty";
 import Show from "components/Appointment/Show";
 import Confirm from "components/Appointment/Confirm";
 import Status from "components/Appointment/Status";
 import Error from "components/Appointment/Error";
+import Form from "components/Appointment/Form";
 
 import "components/Appointment/styles.scss";
 
 export default function Appointment(props) {
   return (
-    <div>
-      <Header time="12pm" />
+    <article className="appointment">
+      <Header time={props.time} />
       <Empty
         onAdd={() => {
           console.log("Hello its empty!");
@@ -48,6 +50,16 @@ export default function Appointment(props) {
           console.log("this is a X symbol!");
         }}
       />
-    </div>
+      <Form
+        onCancel={() => {
+          console.log("item cancelled");
+        }}
+        onSave={() => {
+          console.log("item cancelled");
+        }}
+      />
+    </article>
+    // {props.interview? <Show student={props.interview.student} interviewer={props.interview.interviewer} onEdit={()=>{console.log("Edit clicked")}} onDelete={()=>{console.log("Delete clicked")}} /> : null }
+    // </article>;
   );
 }

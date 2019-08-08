@@ -10,7 +10,7 @@ export default function DayListItem(props) {
   });
 
   return (
-    <div className={dayListItemClass} onClick={props.setDay}>
+    <div className={dayListItemClass} onClick={() => props.setDay(props.name)}>
       <h2>
         <strong>{props.name}</strong>
       </h2>
