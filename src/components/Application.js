@@ -56,6 +56,10 @@ export default function Application(props) {
     setDays(response.data);
   });
 
+  axios.get("http://localhost:3001/api/appointments").then(response => {
+    console.log(response.data);
+  });
+
   return (
     <main className="layout">
       <section className="sidebar">
