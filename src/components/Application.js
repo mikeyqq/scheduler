@@ -1,64 +1,22 @@
-import React, { useState } from "react";
-import DayList from "./DayList";
-import "components/Application.scss";
-import Appointment from "components/Appointment";
-import axios from "axios";
+import React from "react";
 
-const appointments = [
-  {
-    id: 1,
-    time: "12pm",
-    interview: {
-      student: "JayJay",
-      interviewer: {
-        id: 1,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png"
-      }
-    }
-  },
-  {
-    id: 2,
-    time: "2pm",
-    interview: {
-      student: "Tyler",
-      interviewer: {
-        id: 1,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png"
-      }
-    }
-  },
-  {
-    id: 3,
-    time: "3pm",
-    interview: {
-      student: "V",
-      interviewer: {
-        id: 1,
-        name: "Sylvia Palmer",
-        avatar: "https://i.imgur.com/LpaY82x.png"
-      }
-    }
-  },
-  {
-    id: "last",
-    time: "4pm"
-  }
-];
+import "components/Application.scss";
+import DayList from "./DayList";
+import Appointment from "./Appointment/index.js";
+import {
+  getAppointmentsForDay,
+  getInterview,
+  getInterviewersForDay
+} from "../helpers/selectors";
+import useApplicationData from "../hooks/useApplicationData";
 
 export default function Application(props) {
-  const [day, setDate] = useState("Monday");
-  const [days, setDays] = useState([]);
-  // const [interviewer, setInterviewer] = useState(1);
-
-  axios.get("http://localhost:3001/api/days").then(response => {
-    setDays(response.data);
-  });
-
-  axios.get("http://localhost:3001/api/appointments").then(response => {
-    console.log(response.data);
-  });
+  const {
+    state,
+    setDay,
+    bookInterview,
+    cancelInterview
+  } = useApplicationData();
 
   return (
     <main className="layout">
@@ -70,7 +28,7 @@ export default function Application(props) {
         />
 
         <hr className="sidebar__separator sidebar--centered" />
-        <DayList days={days} day={day} setDay={setDate} />
+        <DayList days={state.days} day={state.day} setDay={setDay} />
         <nav className="sidebar__menu" />
 
         <img
@@ -80,14 +38,24 @@ export default function Application(props) {
         />
       </section>
       <section className="schedule">
-        {appointments.map(appointment => (
-          <Appointment
-            key={appointment.id}
-            time={appointment.time}
-            interview={appointment.interview}
-          />
-        ))}
+        {getAppointmentsForDay(state, state.day).map(appointment => {
+          const interview = getInterview(state, appointment.interview);
+          const interviewers = getInterviewersForDay(state, state.day);
+          return (
+            <Appointment
+              key={appointment.id}
+              interview={interview}
+              id={appointment.id}
+              time={appointment.time}
+              interviewers={interviewers}
+              bookInterview={bookInterview}
+              cancelInterview={cancelInterview}
+            />
+          );
+        })}
+        <Appointment key="last" id="last" time="5pm" />
       </section>
+      ​
     </main>
   );
 }

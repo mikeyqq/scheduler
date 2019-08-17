@@ -1,21 +1,36 @@
 export function getAppointmentsForDay(state, day) {
-  let appts = [];
-  let results = [];
-
-  //provides info on which appointment id and number of appoinments
-  for (let a of state.days) {
-    if (a.name === day) {
-      appts.push(...a.appointments);
-    }
-  }
-
-  //Matching appt id in appointments obj to appts for days obj to extract the info in those days
-  for (let d in state.appointments) {
-    for (let a of appts) {
-      if (a === Number(d)) {
-        results.push(state.appointments[d]);
+  let appt = [];
+  let result = [];
+  for (let d of state.days) {
+    if (d.name === day) {
+      appt = d.appointments;
+      for (let a of appt) {
+        result.push(state.appointments[a]);
       }
     }
   }
-  return results;
+  return result;
+}
+
+export function getInterview(state, interview) {
+  if (!interview) {
+    return null;
+  }
+  const interviewerId = interview.interviewer;
+  const resultInterview = { ...interview };
+  resultInterview.interviewer = state.interviewers[interviewerId];
+
+  return resultInterview;
+}
+
+export function getInterviewersForDay(state, day) {
+  let result = [];
+  for (let d of state.days) {
+    if (d.name === day) {
+      for (let personId of d.interviewers) {
+        result.push(state.interviewers[personId]);
+      }
+    }
+  }
+  return result;
 }

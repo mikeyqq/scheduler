@@ -1,18 +1,15 @@
-import React from "react";
+import React, { Fragment } from "react";
 
 import { storiesOf } from "@storybook/react";
 import { action } from "@storybook/addon-actions";
 
 import "index.scss";
 
-// import index from "/components/Appointments/index";
-
 import Button from "components/Button";
-import DayListItem from "components/DayListItem";
 import DayList from "components/DayList";
-import InterviewerListItem from "components/InterviewerListItem";
+import DayListItem from "components/DayListItem";
 import InterviewerList from "components/InterviewerList";
-
+import InterviewerListItem from "components/InterviewerListItem";
 import Appointment from "components/Appointment/index";
 import Header from "components/Appointment/Header";
 import Empty from "components/Appointment/Empty";
@@ -108,7 +105,7 @@ storiesOf("InterviewerListItem", module)
       id={interviewer.id}
       name={interviewer.name}
       avatar={interviewer.avatar}
-      setInterviewer={action("setInterviewer")}
+      onChange={event => action("setInterviewer")(interviewer.id)}
     />
   ));
 
@@ -127,92 +124,115 @@ storiesOf("InterviewerList", module)
   .add("Initial", () => (
     <InterviewerList
       interviewers={interviewers}
-      onChange={action("onChange")}
+      onChange={action("setInterviewer")}
     />
   ))
   .add("Preselected", () => (
     <InterviewerList
       interviewers={interviewers}
       value={3}
-      onChange={action("onChange")}
+      onChange={action("setInterviewer")}
     />
   ));
-
-const appointments = {
-  time: "12pm",
-  student: "Lydia Miller-Jones",
-  interviewer: {
-    id: 1,
-    name: "Sylvia Palmer",
-    avatar: "https://i.imgur.com/LpaY82x.png"
-  }
-};
 
 storiesOf("Appointment", module)
   .addParameters({
     backgrounds: [{ name: "white", value: "#fff", default: true }]
   })
   .add("Appointment", () => <Appointment />)
-  .add("Header", () => <Header time={appointments.time} />)
-  .add("Empty", () => <Empty mode="EMPTY" onAdd={action("onAdd")} />)
-  .add("Show", () => (
+  .add("Appointment with Time", () => <Appointment time="12pm" />);
+
+storiesOf("Header", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }]
+  })
+  .add("Header", () => <Header />)
+  .add("Header with Time", () => <Header time="12pm" />);
+
+storiesOf("Empty", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }]
+  })
+  .add("Empty", () => <Empty />)
+  .add("Empty with onAdd", () => <Empty onAdd={action("Empty clicked")} />);
+
+storiesOf("Show", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }]
+  })
+  .add("Show with student, interviewer", () => (
     <Show
-      mode="SHOW"
-      student={appointments.student}
-      interviewer={appointments.interviewer}
-      onEdit={action("onEdit")}
-      onDelete={action("onDelete")}
+      student={"Lydia Miller-Jones"}
+      interviewer={{
+        id: 1,
+        name: "Sylvia Palmer",
+        avatar: "https://i.imgur.com/LpaY82x.png"
+      }}
+      onEdit={action("Edit clicked")}
+      onDelete={action("Delete clicked")}
     />
-  ))
-  .add("Confirm", () => (
+  ));
+
+storiesOf("Confirm", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }]
+  })
+  .add("Confirm", () => <Confirm />)
+  .add("Confirm with message and buttons", () => (
     <Confirm
-      onCancel={action("onCancel")}
-      onConfirm={action("onConfirm")}
-      message="Delete the Appointment?"
+      message={"Delete the appointment?"}
+      onConfirm={action("Confirm clicked")}
+      onCancel={action("Cancel clicked")}
     />
-  ))
-  .add("Saving", () => <Status message="Saving" />)
-  .add("Deleting", () => <Status message="Deleting" />)
-  .add("Error Saving", () => (
-    <Error message="Could not save appointment." onClose={action("onClose")} />
-  ))
-  .add("Error Deleting", () => (
+  ));
+
+storiesOf("Status", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }]
+  })
+  .add("Status", () => <Status />)
+  .add("Status with message", () => <Status message={"Deleting"} />);
+
+storiesOf("Error", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }]
+  })
+  .add("Error", () => <Error />)
+  .add("Error with message and close", () => (
     <Error
-      message="Could not delete appointment."
-      onClose={action("onClose")}
+      message={"Could not delete appointment"}
+      onClose={action("Error closed")}
     />
-  ))
-  .add("Create", () => (
+  ));
+
+storiesOf("Form", module)
+  .addParameters({
+    backgrounds: [{ name: "white", value: "#fff", default: true }]
+  })
+  .add("Form", () => (
     <Form
-      mode="CREATE"
+      name={"Sylvia Palmer"}
       interviewers={interviewers}
-      onSave={action("onSave")}
-      onCancel={action("onCancel")}
+      interviewer={1}
+      onSave={action("Save clicked")}
+      onCancel={action("Cancel clicked")}
     />
-  ))
-  .add("Edit", () => (
-    <Form
-      mode="EDIT"
-      name="Anchen"
-      interviewer={3}
-      interviewers={interviewers}
-      onSave={action("onSave")}
-      onCancel={action("onCancel")}
-    />
-  ))
+  ));
+
+storiesOf("Application", module)
   .add("Appointment Empty", () => (
-    <>
+    <Fragment>
       <Appointment id={1} time="12pm" />
       <Appointment id="last" time="1pm" />
-    </>
+    </Fragment>
   ))
   .add("Appointment Booked", () => (
-    <>
+    <Fragment>
       <Appointment
         id={1}
         time="12pm"
         interview={{ student: "Lydia Miller-Jones", interviewer }}
       />
       <Appointment id="last" time="1pm" />
-    </>
+    </Fragment>
   ));
