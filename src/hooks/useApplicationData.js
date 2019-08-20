@@ -6,6 +6,8 @@ export default function useApplicationData() {
   const SET_APPLICATION_DATA = "SET_APPLICATION_DATA";
   const SET_INTERVIEW = "SET_INTERVIEW";
 
+  // Manages the state
+  // Interacts with the reducer
   const reducer = (state, action) => {
     switch (action.type) {
       case SET_DAY:
@@ -76,6 +78,8 @@ export default function useApplicationData() {
     dispatch({ type: SET_DAY, day: day });
   };
 
+  // Sends new appointment request to API
+  // sends the info to dispatch to update the state
   function bookInterview(id, interview) {
     return axios
       .put(`http://localhost:3001/api/appointments/${id}`, { interview })
@@ -88,7 +92,8 @@ export default function useApplicationData() {
         resetState();
       });
   }
-
+  // Sends cancellation request to API
+  // sends the info to dispatch to update the state
   const cancelInterview = id => {
     return axios
       .delete(`http://localhost:3001/api/appointments/${id}`)

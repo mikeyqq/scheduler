@@ -21,6 +21,7 @@ export default function Appointment(props) {
   const ERROR_DELETE = "ERROR_DELETE";
   const DELETING = "DELETING";
 
+  // Tracks initial mode, submits SHOW or EMPTY based on (interview === null)?
   let initMode = props.interview ? SHOW : EMPTY;
   const { mode, transition, back } = useVisualMode(initMode);
 
@@ -40,6 +41,7 @@ export default function Appointment(props) {
       .catch(() => transition(ERROR_DELETE, true));
   }
 
+  // Outputs one Appointment
   return (
     <article className="appointment" data-testid="appointment">
       <Header time={props.time} />
